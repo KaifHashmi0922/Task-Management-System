@@ -26,32 +26,32 @@
   {% block extra_head %}{% endblock %}
 </head>
 
-<body class="h-full text-slate-800 antialiased">
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
 
-  <div class="lg:flex lg:min-h-screen relative">
+  <div class="min-h-screen bg-slate-50">
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 -translate-x-full border-r border-slate-200 bg-white px-4 py-6 shadow-xl transition duration-300 ease-in-out lg:static lg:translate-x-0 lg:z-auto lg:w-72 lg:shadow-none">
+    <aside id="sidebar" class="fixed top-0 left-0 z-50 h-screen w-64 -translate-x-full border-r border-slate-200 bg-white px-4 py-6 shadow-xl transition duration-300 ease-in-out md:translate-x-0 md:shadow-none">
       {% include 'partials/sidebar.html' %}
     </aside>
 
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-slate-900/50 lg:hidden"></div>
+    <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-slate-900/50 md:hidden"></div>
 
     <!-- Main Layout -->
-    <div class="flex-1 lg:pl-72 flex flex-col min-h-screen">
+    <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
 
       <!-- Navbar -->
-      <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b">
+      <header class="sticky top-0 z-10 bg-white border-b border-slate-200">
         {% include 'partials/navbar.html' %}
       </header>
 
       <!-- Page Content -->
-      <main class="flex-1 py-8 sm:py-10">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl space-y-6">
 
           <!-- Messages -->
-          {% include 'partials/messages.html' %}
+          {% comment %} {% include 'partials/messages.html' %} {% endcomment %}
 
           <!-- Page Header -->
           <div class="mb-8">

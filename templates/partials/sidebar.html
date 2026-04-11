@@ -8,14 +8,17 @@
 
 <nav class="mt-8 flex flex-1 flex-col gap-2 text-sm font-medium text-slate-700">
   <a href="{% url 'dashboard' %}"
+  
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'dashboard' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Dashboard
   </a>
   <a href="{% url 'task_list' %}"
+
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'task_list' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Tasks
   </a>
   <a href="{% url 'project_list' %}"
+ 
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'project_list' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Projects
   </a>
