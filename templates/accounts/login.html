@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Login | Task Manager{% endblock %}
+{% block page_title %}Welcome back{% endblock %}
+{% block page_subtitle %}Enter your account details to continue.{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md rounded-3xl bg-white p-8 shadow-sm border border-slate-200">
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="rounded-3xl bg-red-50 p-4 text-sm text-red-700 border border-red-200">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div class="space-y-5">
+      <div>
+        <label for="id_username" class="block text-sm font-medium text-slate-700">Email or username</label>
+        <input id="id_username" name="username" type="text" value="{{ form.username.value|default:'' }}" required
+          class="mt-2 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+        {% if form.username.errors %}<p class="mt-2 text-sm text-red-600">{{ form.username.errors|first }}</p>{% endif %}
+      </div>
+      <div>
+        <label for="id_password" class="block text-sm font-medium text-slate-700">Password</label>
+        <input id="id_password" name="password" type="password" required
+          class="mt-2 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+        {% if form.password.errors %}<p class="mt-2 text-sm text-red-600">{{ form.password.errors|first }}</p>{% endif %}
+      </div>
+    </div>
+    <button type="submit" class="w-full rounded-3xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">Sign in</button>
+  </form>
+  <p class="mt-6 text-center text-sm text-slate-500">Forgot your password? <a href="{% url 'forget_password' %}" class="font-semibold text-indigo-600 hover:text-indigo-700">Reset it</a></p>
+  <p class="mt-4 text-center text-sm text-slate-500">Don’t have an account? <a href="{% url 'register' %}" class="font-semibold text-indigo-600 hover:text-indigo-700">Create one</a></p>
+</div>
+{% endblock %}

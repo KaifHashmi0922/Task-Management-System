@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'tasks',
+    'accounts',
+    
 ]
 
 MIDDLEWARE = [
@@ -50,11 +54,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Task_Management.urls'
+AUTH_USER_MODEL = "accounts.User"
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["TEMPLATES"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

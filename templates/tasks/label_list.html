@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block page_title %}Labels{% endblock %}
+
+{% block page_subtitle %}Manage your task labels{% endblock %}
+
+<div class="rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+  <h3 class="text-lg font-semibold">Labels</h3>
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    {% for label in labels %}
+      <span class="rounded-full bg-indigo-50 text-indigo-700 px-4 py-2 text-sm font-medium hover:bg-indigo-100 transition">
+        {{ label.name }}
+      </span>
+    {% empty %}
+      <p class="text-slate-500 text-center w-full">No labels yet.</p>
+    {% endfor %}
+  </div>
+</div>

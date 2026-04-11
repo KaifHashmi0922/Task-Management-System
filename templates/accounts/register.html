@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Register | Task Manager{% endblock %}
+{% block page_title %}Create account{% endblock %}
+{% block page_subtitle %}Start managing tasks with your team today.{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md rounded-3xl bg-white p-8 shadow-sm border border-slate-200">
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="rounded-3xl bg-red-50 p-4 text-sm text-red-700 border border-red-200">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div class="space-y-5">
+      <div>
+        <label for="id_username" class="block text-sm font-medium text-slate-700">Username</label>
+        <input id="id_username" name="username" type="text" value="{{ form.username.value|default:'' }}" required
+          class="mt-2 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+        {% if form.username.errors %}<p class="mt-2 text-sm text-red-600">{{ form.username.errors|first }}</p>{% endif %}
+      </div>
+      <div>
+        <label for="id_email" class="block text-sm font-medium text-slate-700">Email</label>
+        <input id="id_email" name="email" type="email" value="{{ form.email.value|default:'' }}" required
+          class="mt-2 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+        {% if form.email.errors %}<p class="mt-2 text-sm text-red-600">{{ form.email.errors|first }}</p>{% endif %}
+      </div>
+      <div>
+        <label for="id_password1" class="block text-sm font-medium text-slate-700">Password</label>
+        <input id="id_password1" name="password1" type="password" required minlength="8"
+          class="mt-2 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+        {% if form.password1.errors %}<p class="mt-2 text-sm text-red-600">{{ form.password1.errors|first }}</p>{% endif %}
+      </div>
+      <div>
+        <label for="id_password2" class="block text-sm font-medium text-slate-700">Confirm password</label>
+        <input id="id_password2" name="password2" type="password" required minlength="8"
+          class="mt-2 w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+        {% if form.password2.errors %}<p class="mt-2 text-sm text-red-600">{{ form.password2.errors|first }}</p>{% endif %}
+      </div>
+    </div>
+    <button type="submit" class="w-full rounded-3xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">Create account</button>
+  </form>
+  <p class="mt-6 text-center text-sm text-slate-500">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-indigo-600 hover:text-indigo-700">Sign in</a></p>
+</div>
+{% endblock %}
