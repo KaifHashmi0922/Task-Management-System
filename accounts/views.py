@@ -86,8 +86,9 @@ def dashboard(request):
     
     
     stats={'total':50,'completed':10,'pending':2,'overdue':10}
+    context={'stats':stats,'task':task,'comments':commnets,'projects':projects,'recent_tasks':recent_task}
    
-    return render(request, "dashboard.html",{'stats':stats,'task':task,'comments':commnets,'projects':projects,'recent_tasks':recent_task})
+    return render(request, "dashboard.html",context)
 
 
 # ---------------- FORGOT PASSWORD ---------------- #

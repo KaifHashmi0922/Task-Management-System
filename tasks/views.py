@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Task
+from .models import Task,Project
 
 from django.shortcuts import render
 
@@ -182,8 +182,10 @@ def project_create(request):
     }
     return render(request, "projects/project_create.html", context)
 
-def project_delete(request):
-    return render(request, 'projects/project_delete.html')
+def project_delete(request,id ):
+    project=Project.objects.get(id=id)
+    project.delete()
+    return redirect('project_list')
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -284,8 +286,22 @@ def task_list(request):
 def task_create(request):
     return render(request, 'tasks/task_create.html')
 
-def task_delete(request):
-    return render(request, 'tasks/task_delete.html')
+def task_delete(request,id):
+    task=Task.objects.get(id=id)
+    task.delete()
 
-def task_update(req):
-    pass
+    return redirect('task_list')
+
+def task_update(request,id):
+    task=Task.objects.get(id=id)
+    # Dummy data for testing
+    dummy_data = {
+        'task': task,
+        'dummy_title': 'Sample Task Title',
+        'dummy_description': 'This is a dummy description for testing purposes.',
+        'dummy_status': 'in_progress',
+        'dummy_priority': 'high',
+        'dummy_assigned_to': 'John Doe',
+        'dummy_project': 'Sample Project',
+    }
+    return render(request,"tasks/task_update.html", dummy_data)
