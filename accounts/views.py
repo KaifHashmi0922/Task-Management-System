@@ -14,8 +14,12 @@ from tasks.models import Task,Attachment,models,Comment,Label,Project
 
 
 
+STATUS_CHOICES = ["To Do","In Progress","Review","Done"]
+PRIORITY_CHOICES = ["Low","Medium","High","Urgent"]
+ASSIGN_CHOICES=['Admin','Manager']
 # ---------------- REGISTER ---------------- #
 def register(request):
+    
     if request.method == "POST":
         username = request.POST.get('username', '').strip()
         email = request.POST.get('email', '').strip()
@@ -49,8 +53,8 @@ def register(request):
         except IntegrityError:
             messages.error(request, "Something went wrong")
             return redirect('register')
-
-    return render(request, "accounts/register.html", {'logged_in': False})
+    
+    return render(request, "accounts/register.html", context={'test':True})
 
 
 # ---------------- LOGIN ---------------- #

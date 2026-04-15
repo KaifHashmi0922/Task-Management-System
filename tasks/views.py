@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Task,Project
+from accounts.models import User
 
 from django.shortcuts import render
 from django.core.paginator import Paginator
@@ -313,7 +314,30 @@ def task_list(request):
 
 
 def task_create(request):
-    return render(request, 'tasks/task_create.html')
+    if request.method=="POST":
+        task_title=request.POST.get('title','').strip()
+        description=request.POST.get('descritption','').strip()
+        status=request.POST.get('status','').strip()
+        priority=request.POST.get('priority','').strip()
+        is_completed=request.POST.get('is_completed','').strip()
+        project_id=request.POST.get('project','').strip()
+        due_date=request.POST.get('due_date','').strip()
+        assigned_to=request.POST.get('assigned_to','').strip()
+        Task.objects.create()
+    STATUS_CHOICES = ["To Do","In Progress","Review","Done"]
+    PRIORITY_CHOICES = ["Low","Medium","High","Urgent"]
+    ASSIGN_CHOICES=['Admin','Manger']
+    ASSIGN_USERNAME=User.objects.all().values('username')
+    print(ASSIGN_USERNAME)
+    project=Project.objects.all()
+    context={
+        'Projects':project,
+        'STATUS_CHOICES':STATUS_CHOICES,
+        'PRIORITY_CHOICES':PRIORITY_CHOICES,
+        'ASSIGN_CHOICES':ASSIGN_CHOICES,
+        'ASSIGN_USERNAME':ASSIGN_USERNAME,
+        }
+    return render(request, 'tasks/task_create.html',context)
 
 def task_delete(request,id):
     task=Task.objects.get(id=id)

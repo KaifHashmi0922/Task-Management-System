@@ -17,14 +17,14 @@
         <div>
           <label for="id_title" class="block text-sm font-medium text-slate-700">Title</label>
           <input id="id_title" name="title" type="text" value="{{ form.title.value|default:'' }}" required minlength="3" maxlength="200"
-            class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+            class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"  required/>
           <p class="mt-2 text-sm text-slate-500">Enter a concise task title.</p>
           {% if form.title.errors %}<p class="mt-2 text-sm text-red-600">{{ form.title.errors|first }}</p>{% endif %}
         </div>
         <div class="md:col-span-2">
           <label for="id_description" class="block text-sm font-medium text-slate-700">Description</label>
           <textarea id="id_description" name="description" rows="5"
-            class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">{{ form.description.value|default:'' }}</textarea>
+            class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" required>{{ form.description.value|default:'' }}</textarea>
           <p class="mt-2 text-sm text-slate-500">Add helpful details for your collaborators.</p>
           {% if form.description.errors %}<p class="mt-2 text-sm text-red-600">{{ form.description.errors|first }}</p>{% endif %}
         </div>
@@ -41,17 +41,17 @@
             <select id="id_project" name="project" required
               class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
               <option value="">Select project</option>
-              {% for option in form.project.field.queryset %}
-              <option value="{{ option.pk }}" {% if option.pk|stringformat:'s' == form.project.value %}selected{% endif %}>{{ option.name }}</option>
+              {% for option in Projects %}
+              <option value="{{ option.id }}" >{{ option.name }}</option>
               {% endfor %}
             </select>
             <p class="mt-2 text-sm text-slate-500">Assign the task to a project.</p>
             {% if form.project.errors %}<p class="mt-2 text-sm text-red-600">{{ form.project.errors|first }}</p>{% endif %}
           </div>
           <div>
-            <label for="id_due_date" class="block text-sm font-medium text-slate-700">Due date</label>
+            <label for="id_due_date" class="block text-sm font-medium text-slate-700" >Due date</label>
             <input id="id_due_date" name="due_date" type="date" value="{{ form.due_date.value|default:'' }}"
-              class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+              class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" required/>
             <p class="mt-2 text-sm text-slate-500">Optional deadline for the task.</p>
             {% if form.due_date.errors %}<p class="mt-2 text-sm text-red-600">{{ form.due_date.errors|first }}</p>{% endif %}
           </div>
@@ -65,8 +65,9 @@
             <label for="id_status" class="block text-sm font-medium text-slate-700">Status</label>
             <select id="id_status" name="status" required
               class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
-              {% for option in form.status.field.choices %}
-              <option value="{{ option.0 }}" {% if option.0 == form.status.value %}selected{% endif %}>{{ option.1 }}</option>
+              <option value="">Select Status</option>
+              {% for option in STATUS_CHOICES %}
+              <option value="{{ option }}" >{{ option }}</option>
               {% endfor %}
             </select>
             <p class="mt-2 text-sm text-slate-500">Select the current task state.</p>
@@ -76,15 +77,16 @@
             <label for="id_priority" class="block text-sm font-medium text-slate-700">Priority</label>
             <select id="id_priority" name="priority" required
               class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
-              {% for option in form.priority.field.choices %}
-              <option value="{{ option.0 }}" {% if option.0 == form.priority.value %}selected{% endif %}>{{ option.1 }}</option>
+              <option value="">Select Priority</option>
+              {% for option in PRIORITY_CHOICES %}
+              <option value="{{ option }}" >{{ option }}</option>
               {% endfor %}
             </select>
             <p class="mt-2 text-sm text-slate-500">Select how urgent this task is.</p>
             {% if form.priority.errors %}<p class="mt-2 text-sm text-red-600">{{ form.priority.errors|first }}</p>{% endif %}
           </div>
           <div class="flex items-center gap-3 rounded-2xl border border-slate-300 bg-white px-4 py-4">
-            <input id="id_is_completed" name="is_completed" type="checkbox" value="true" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" {% if form.is_completed.value %}checked{% endif %} />
+            <input id="id_is_completed" name="is_completed" type="checkbox" value="true" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" {% if form.is_completed.value %}checked{% endif %}  required/>
             <div>
               <label for="id_is_completed" class="text-sm font-medium text-slate-900">Mark complete</label>
               <p class="text-sm text-slate-500">Check when this task is finished.</p>
@@ -101,9 +103,9 @@
       <div class="mt-6">
         <label for="id_assigned_to" class="block text-sm font-medium text-slate-700">Assigned user</label>
         <select id="id_assigned_to" name="assigned_to"
-          class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
-          <option value="">No assignment</option>
-          {% for option in form.assigned_to.field.queryset %}
+          class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 " required>
+          <option value="">Select Assignment</option>
+          {% for option in ASSIGN_USERNAME %}
           <option value="{{ option.pk }}" {% if option.pk|stringformat:'s' == form.assigned_to.value %}selected{% endif %}>{{ option.get_full_name|default:option.username }}</option>
           {% endfor %}
         </select>
