@@ -6,7 +6,7 @@ from users import views
 urlpatterns = [
     path('profile_edit/',views.profile_edit,name="profile_edit"),
     path('profile/',views.profile,name='profile'),
-    path('user_list/',views.user_list,name='user_list'),
+    path('users_list/',views.users_list,name='users_list'),
   
    
     

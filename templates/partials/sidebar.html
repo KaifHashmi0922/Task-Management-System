@@ -26,7 +26,7 @@
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'activity' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Activity
   </a>
-  <a href="{% url 'user_list' %}"
+  <a href="{% url 'users_list' %}"
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'user_list' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Team
   </a>

@@ -28,6 +28,10 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
 
+  
+
+
+  
   <div class="min-h-screen bg-slate-50">
 
     <!-- Sidebar -->
@@ -73,9 +77,10 @@
       </main>
 
       <!-- Footer -->
-      <footer class="bg-white border-t text-sm text-slate-500 py-4 text-center">
+       <footer class="bg-white border-t text-sm text-slate-500 py-4 text-center">
         © {% now "Y" %} Task Manager. All rights reserved.
       </footer>
+     
 
     </div>
 
@@ -97,6 +102,25 @@
     }
 
     overlay?.addEventListener('click', closeSidebar);
+
+
+    
+  function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const button = document.querySelector('[aria-controls="sidebar"]');
+
+    sidebar.classList.remove('-translate-x-full');
+    button.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const button = document.querySelector('[aria-controls="sidebar"]');
+
+    sidebar.classList.add('-translate-x-full');
+    button.setAttribute('aria-expanded', 'false');
+  }
+
   </script>
 
   <!-- Animation -->
