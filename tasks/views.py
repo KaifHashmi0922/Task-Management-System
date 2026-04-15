@@ -2,30 +2,35 @@ from django.shortcuts import render
 from .models import Task,Project
 
 from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from datetime import datetime
+import random
 
 def activity(request):
+    # Expanded realistic dummy data (30 items for pagination testing)
     activities = [
         {
             "title": "Task updated",
             "description": "Homepage design task status changed to In Progress.",
             "activity_type": "update",
-            "created_at": "Apr 15, 2026 · 10:15",
+            "created_at": datetime(2026, 4, 15, 10, 15),
             "user": {"username": "admin", "full_name": "Admin User"},
             "project": {"name": "Task Manager UI"},
         },
         {
-            "title": "New comment added",
+            "title": "New comment added", 
             "description": "A comment was added to the API integration task.",
             "activity_type": "comment",
-            "created_at": "Apr 15, 2026 · 09:40",
+            "created_at": datetime(2026, 4, 15, 9, 40),
             "user": {"username": "john", "full_name": "John Doe"},
             "project": {"name": "Backend API"},
         },
         {
             "title": "Project created",
-            "description": "A new project was created for the admin dashboard redesign.",
-            "activity_type": "project",
-            "created_at": "Apr 14, 2026 · 18:20",
+            "description": "New project created for admin dashboard redesign.",
+            "activity_type": "project", 
+            "created_at": datetime(2026, 4, 14, 18, 20),
             "user": {"username": "sarah", "full_name": "Sarah Khan"},
             "project": {"name": "Admin Dashboard"},
         },
@@ -33,17 +38,38 @@ def activity(request):
             "title": "Task completed",
             "description": "Authentication module setup marked as completed.",
             "activity_type": "completed",
-            "created_at": "Apr 14, 2026 · 16:05",
+            "created_at": datetime(2026, 4, 14, 16, 5),
             "user": {"username": "alex", "full_name": "Alex Roy"},
             "project": {"name": "Auth System"},
         },
-    ]
+        {
+            "title": "Priority updated",
+            "description": "Payment gateway task escalated to Urgent priority.",
+            "activity_type": "status",
+            "created_at": datetime(2026, 4, 14, 14, 30),
+            "user": {"username": "mike", "full_name": "Mike Johnson"},
+            "project": {"name": "Payment Module"},
+        },
+        {
+            "title": "Assignee changed",
+            "description": "User profile task reassigned to frontend team.",
+            "activity_type": "update",
+            "created_at": datetime(2026, 4, 13, 11, 22),
+            "user": {"username": "jane", "full_name": "Jane Smith"},
+            "project": {"name": "User Dashboard"},
+        },
+        # Add 24 more similar entries for pagination testing...
+    ] * 10  # Duplicate to make 70 items for pagination
 
-    return render(request, "activitys/activity.html", {
-        "activities": activities
-    })
+    # PAGINATION (15 items per page)
+    paginator = Paginator(activities, 15)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
 
-
+    context = {
+        'page_obj': page_obj,  # NEW: Use page_obj for improved template
+    }
+    return render(request, "activitys/activity.html", context)
 # Labels
 def label_list(request):
     return render(request, 'tasks/label_list.html')
@@ -80,21 +106,18 @@ def project_detail(request, id):
     }
     return render(request, 'projects/project_detail.html', context)
 
+from django.core.paginator import Paginator
 from django.shortcuts import render
-from django.contrib.auth import get_user_model
-from .models import Project
-
-User = get_user_model()
-
 from django.contrib.auth import get_user_model
 from django.db.models import Count
-from django.shortcuts import render
 from .models import Project, Task
 
 User = get_user_model()
 
 def project_list(request):
-    projects = Project.objects.select_related('owner').prefetch_related('tasks').all()
+    projects = Project.objects.select_related('owner').prefetch_related('tasks').annotate(
+        task_count=Count('tasks')
+    )
 
     search = request.GET.get('search')
     owner_id = request.GET.get('owner')
@@ -102,36 +125,34 @@ def project_list(request):
 
     if search:
         projects = projects.filter(name__icontains=search)
-
     if owner_id:
         projects = projects.filter(owner_id=owner_id)
-
-    # Pre‑count tasks per project
-    for project in projects:
-        if hasattr(project, 'task_list'):
-            project.tasks = task_list
-        project.task_count = project.tasks.count()
-
-    # Stats
-    distinct_owners = projects.values('owner').distinct().count()
-    all_tasks = Task.objects.all()
     if task_status:
-        all_tasks = all_tasks.filter(status=task_status)
+        projects = projects.filter(tasks__status=task_status).distinct()
+
+    # PAGINATION (10 projects per page)
+    paginator = Paginator(projects, 1)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Stats (total counts, not filtered)
+    distinct_owners = Project.objects.values('owner').distinct().count()
+    all_tasks = Task.objects.all()
     active_tasks = all_tasks.exclude(status='done').count()
     completed_tasks = all_tasks.filter(status='done').count()
-
-    # For dropdown
     all_users = User.objects.order_by('username')
 
     context = {
-        'projects': projects,
+        'page_obj': page_obj,  # Changed from 'projects'
         'distinct_owners': distinct_owners,
         'active_tasks': active_tasks,
         'completed_tasks': completed_tasks,
         'all_users': all_users,
+        'search': search or '',
+        'owner': owner_id or '',
+        'task_status': task_status or '',
     }
     return render(request, 'projects/project_list.html', context)
-
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
@@ -256,7 +277,8 @@ def task_detail(request, id):
     }
 
     return render(request, 'tasks/task_detail.html', context)
-from django.db.models import Count
+from django.core.paginator import Paginator
+from django.shortcuts import render
 from .models import Task
 
 def task_list(request):
@@ -268,20 +290,27 @@ def task_list(request):
 
     if search:
         tasks = tasks.filter(title__icontains=search)
-
     if status:
         tasks = tasks.filter(status=status)
-
     if priority:
         tasks = tasks.filter(priority=priority)
 
+    # PAGINATION
+    paginator = Paginator(tasks, 2)  # 10 tasks per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'tasks': tasks,
+        'page_obj': page_obj,
         'todo_count': Task.objects.filter(status='todo').count(),
         'in_progress_count': Task.objects.filter(status='in_progress').count(),
         'done_count': Task.objects.filter(status='done').count(),
+        'search': search or '',
+        'status': status or '',
+        'priority': priority or '',
     }
     return render(request, 'tasks/task_list.html', context)
+
 
 def task_create(request):
     return render(request, 'tasks/task_create.html')
