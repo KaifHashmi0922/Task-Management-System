@@ -1,91 +1,65 @@
-from django.shortcuts import render
-from tasks.models import Task
+from django.shortcuts import render, get_object_or_404,redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from tasks.models import Task, Project
+
+User = get_user_model()
 
 
-
-from django.shortcuts import render
-from types import SimpleNamespace
-
-from types import SimpleNamespace
-
+# ================= PROFILE ================= #
+@login_required
 def profile(request):
-    user = SimpleNamespace(
-        id=1,
-        username="farhan",
-        email="farhan@example.com",
-        date_joined="2025-08-12",
-        get_full_name="Farhan Ali"
-    )
+    user = request.user
 
-    profile = SimpleNamespace(
-        id=1,   # ✅ IMPORTANT
-        user=user,
-        role="Frontend Developer",
-        bio="Focused on building clean interfaces...",
-        phone="+91-9876543210",
-        open_tasks_count=7,
-        project_count=4,
-        completed_tasks_count=18,
-    )
+    # 🔥 REAL COUNTS
+    open_tasks = Task.objects.filter(assigned_to=user, is_completed=False).count()
+    completed_tasks = Task.objects.filter(assigned_to=user, is_completed=True).count()
+    projects = Project.objects.filter(members=user).count()
 
-    return render(request, "users/profile.html", {"profile": profile})
+    context = {
+        "profile": {
+            "user": user,
+            "role": getattr(user, "role", "Member"),
+            "bio": getattr(user, "bio", ""),
+            "open_tasks_count": open_tasks,
+            "project_count": projects,
+            "completed_tasks_count": completed_tasks,
+        }
+    }
 
-from types import SimpleNamespace
+    return render(request, "users/profile.html", context)
 
+
+@login_required
 def profile_edit(request, id):
-    user = SimpleNamespace(
-        first_name="Farhan",
-        last_name="Ali",
-        email="farhan@example.com"
-    )
+    user = request.user
 
-    profile = SimpleNamespace(
-        id=id,
-        user=user,
-        role="Frontend Developer",
-        bio="Focused on building clean interfaces...",
-        phone="+91-9876543210"
-    )
+    if request.method == "POST":
+        user.first_name = request.POST.get("first_name", "")
+        user.last_name = request.POST.get("last_name", "")
+        user.email = request.POST.get("email", "")
+        user.phone = request.POST.get("phone", "")
+        user.bio = request.POST.get("bio", "")
+        user.save()
+        return redirect('profile')
+    context = {
+        "profile": {
+            "user": user,
+            "id":getattr(user, "id", ""),
+            "email":getattr(user, "email", ""),
+            "role": getattr(user, "role", ""),
+            "bio": getattr(user, "bio", ""),
+            "phone": getattr(user, "phone", ""),
+        }
+    }
 
-    return render(request, "users/profile_edit.html", {'profile': profile})  
+    return render(request, "users/profile_edit.html", context)
 
 
-from django.shortcuts import render
-
+@login_required
 def users_list(request):
-    users = [
-        {
-            "username": "john",
-            "full_name": "John Doe",
-            "email": "john@example.com",
-            "profile": {"role": "Admin"},
-        },
-        {
-            "username": "sarah",
-            "full_name": "Sarah Khan",
-            "email": "sarah@example.com",
-            "profile": {"role": "Manager"},
-        },
-        {
-            "username": "alex",
-            "full_name": "Alex Roy",
-            "email": "alex@example.com",
-            "profile": {"role": "Developer"},
-        },
-        {
-            "username": "tina",
-            "full_name": "Tina Mehta",
-            "email": "tina@example.com",
-            "profile": {"role": "Designer"},
-        },
-        {
-            "username": "mike",
-            "full_name": "Mike Chang",
-            "email": "mike@example.com",
-            "profile": {"role": "Member"},
-        },
-    ]
+    users = User.objects.all()
+
     return render(request, "users/users_list.html", {
         "users": users
     })
-

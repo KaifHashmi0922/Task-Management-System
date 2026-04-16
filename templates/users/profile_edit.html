@@ -47,7 +47,7 @@
     </div>
     <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
       <a href="{% url 'profile' %}" class="inline-flex items-center justify-center rounded-3xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</a>
-      <button type="submit" class="inline-flex items-center justify-center rounded-3xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">Save changes</button>
+      <a href="{% url 'profile_edit' profile.user.id  %}"><button type="submit" class="inline-flex items-center justify-center rounded-3xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">Save changes</button></a>
     </div>
   </form>
 </div>
