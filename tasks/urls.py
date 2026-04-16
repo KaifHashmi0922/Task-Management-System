@@ -7,7 +7,7 @@ from tasks import views
 urlpatterns = [
     
     
-    path('activity/',views.activity,name="activity"),
+ 
    
     path('label_list/',views.label_list,name='label_list'),
     path('project_detail/<int:id>',views.project_detail,name='project_detail'),

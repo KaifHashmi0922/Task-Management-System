@@ -22,7 +22,7 @@
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'project_list' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Projects
   </a>
-  <a href="{% url 'activity' %}"
+  <a href="{% url 'activity_list' %}"
      class="flex items-center gap-3 rounded-2xl px-4 py-3 transition duration-150 {% if request.resolver_match.url_name == 'activity' %}bg-indigo-50 text-indigo-600{% else %}hover:bg-slate-100{% endif %}">
     Activity
   </a>
