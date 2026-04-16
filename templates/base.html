@@ -7,10 +7,9 @@
 
   <title>{% block title %}Task Manager{% endblock %}</title>
 
-  <!-- Tailwind CDN -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Optional Tailwind Config -->
   <script>
     tailwind.config = {
       theme: {
@@ -28,113 +27,119 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
 
-  
+{% if request.user.is_authenticated %}
 
+<!-- ================= AUTH USER ================= -->
+<div class="min-h-screen bg-slate-50">
 
-  
-  <div class="min-h-screen bg-slate-50">
+  <!-- Sidebar -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 z-50 h-screen w-64 -translate-x-full border-r border-slate-200 bg-white px-4 py-6 shadow-xl transition duration-300 md:translate-x-0">
+    {% include 'partials/sidebar.html' %}
+  </aside>
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 z-50 h-screen w-64 -translate-x-full border-r border-slate-200 bg-white px-4 py-6 shadow-xl transition duration-300 ease-in-out md:translate-x-0 md:shadow-none">
-      {% include 'partials/sidebar.html' %}
-    </aside>
+  <!-- Overlay -->
+  <div id="sidebarOverlay"
+    class="fixed inset-0 z-40 hidden bg-slate-900/50 md:hidden"></div>
 
-    <!-- Mobile Sidebar Overlay -->
-    <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-slate-900/50 md:hidden"></div>
+  <!-- Main -->
+  <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
 
-    <!-- Main Layout -->
-    <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-10 bg-white border-b border-slate-200">
+      {% include 'partials/navbar.html' %}
+    </header>
 
-      <!-- Navbar -->
-      <header class="sticky top-0 z-10 bg-white border-b border-slate-200">
-        {% include 'partials/navbar.html' %}
-      </header>
+    <!-- Content Start -->
+    <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl space-y-6">
 
-      <!-- Page Content -->
-      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-7xl space-y-6">
-
-          <!-- Messages -->
-          {% comment %} {% include 'partials/messages.html' %} {% endcomment %}
-
-          <!-- Page Header -->
-          <div class="mb-8">
-            <div class="flex flex-col gap-3 sm:items-end sm:justify-between sm:flex-row">
-              <div class="space-y-1">
-                <h1 class="text-2xl font-semibold text-slate-900">{% block page_title %}{% endblock %}</h1>
-                <p class="text-sm text-slate-500">{% block page_subtitle %}{% endblock %}</p>
-              </div>
-              {% block header_actions %}{% endblock %}
-            </div>
-          </div>
-
-          <!-- Page Content -->
-          <div class="animate-fadeIn">
-            {% block content %}{% endblock %}
-          </div>
-
+        <!-- Page Header -->
+        <div>
+          <h1 class="text-2xl font-semibold text-slate-900">
+            {% block page_title %}{% endblock %}
+          </h1>
+          <p class="text-sm text-slate-500">
+            {% block page_subtitle %}{% endblock %}
+          </p>
         </div>
-      </main>
 
-      <!-- Footer -->
-       <footer class="bg-white border-t text-sm text-slate-500 py-4 text-center">
-        © {% now "Y" %} Task Manager. All rights reserved.
-      </footer>
-     
+{% else %}
 
-    </div>
+<!-- ================= GUEST ================= -->
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+
+{% endif %}
+
+<!-- ✅ ONLY ONE CONTENT BLOCK -->
+{% block content %}{% endblock %}
+
+{% if request.user.is_authenticated %}
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t text-sm text-slate-500 py-4 text-center">
+      © {% now "Y" %} Task Manager. All rights reserved.
+    </footer>
 
   </div>
+</div>
 
-  <!-- Small Enhancements -->
-  <script>
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
+{% else %}
 
-    function openSidebar() {
-      sidebar.classList.remove('-translate-x-full');
-      overlay.classList.remove('hidden');
-    }
+  </div>
+</div>
 
-    function closeSidebar() {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('hidden');
-    }
+{% endif %}
 
-    overlay?.addEventListener('click', closeSidebar);
+<!-- ================= JS ================= -->
+{% if request.user.is_authenticated %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
 
-
-    
   function openSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const button = document.querySelector('[aria-controls="sidebar"]');
-
-    sidebar.classList.remove('-translate-x-full');
-    button.setAttribute('aria-expanded', 'true');
+    sidebar?.classList.remove('-translate-x-full');
+    overlay?.classList.remove('hidden');
   }
 
   function closeSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const button = document.querySelector('[aria-controls="sidebar"]');
-
-    sidebar.classList.add('-translate-x-full');
-    button.setAttribute('aria-expanded', 'false');
+    sidebar?.classList.add('-translate-x-full');
+    overlay?.classList.add('hidden');
   }
 
-  </script>
+  overlay?.addEventListener('click', closeSidebar);
 
-  <!-- Animation -->
-  <style>
-    .animate-fadeIn {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  // global access for navbar button
+  window.openSidebar = openSidebar;
+  window.closeSidebar = closeSidebar;
+});
+</script>
+{% endif %}
 
-  {% block extra_js %}{% endblock %}
+<!-- Animation -->
+<style>
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>

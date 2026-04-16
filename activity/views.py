@@ -8,7 +8,7 @@ from django.shortcuts import render
 from datetime import datetime
 import random
 
-def activity(request):
+def activitys(request):
     # Expanded realistic dummy data (30 items for pagination testing)
     activities = [
         {

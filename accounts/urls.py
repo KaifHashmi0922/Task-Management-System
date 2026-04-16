@@ -4,10 +4,13 @@ from accounts import views
 
 
 urlpatterns = [
-    path('',views.dashboard,name='dashboard'),
+    path('dashboard/',views.dashboard,name='dashboard'),
     path('register/',views.register,name="register"),
-    path('login/',views.login,name='login'),
-    path('forget_password/',views.forget_password,name='forget_password'),
+    path('',views.login,name='login'),
+     path('logout/',views.logout,name='logout'),
+    
+    path('forget_password/',views.forget_password,name='forget_password'),\
+    path('verify_otp/',views.verify_otp,name='verify_otp'),
     path('reset_password',views.reset_password,name='reset_password'),
     
    
