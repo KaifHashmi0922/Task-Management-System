@@ -1,6 +1,5 @@
 import logging
 import random
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
@@ -59,8 +58,13 @@ def validate_registration(username, email, password, confirm_password, role):
 
 
 # ===================== REGISTER ===================== #
-@anonymous_required
 def register(request):
+    is_invite = request.GET.get("invite")
+
+    # ❗ Allow only admin/manager if logged in
+    if request.user.is_authenticated and not is_invite:
+        return redirect('dashboard')
+
     if request.method == "POST":
         username = request.POST.get('username', '').strip()
         email = request.POST.get('email', '').strip()
@@ -89,20 +93,23 @@ def register(request):
                 if avatar:
                     user.avatar.save(avatar.name, avatar)
 
+            # ✅ ADMIN / MANAGER FLOW (Invite Member)
+            if is_invite:
+                messages.success(request, "Member added successfully")
+                return redirect('dashboard')
+
+            # ✅ NORMAL USER REGISTER
             messages.success(request, "Account created successfully")
             return redirect('login')
 
         except AccountsException as e:
             messages.error(request, str(e))
-            logger.warning(f"Register error: {e}")
 
         except Exception as e:
             logger.critical(f"Register crash: {e}", exc_info=True)
             messages.error(request, "Something went wrong")
 
-    return render(request, "accounts/register.html")
-
-
+    return render(request, "accounts/register.html", {"is_invite": is_invite})
 # ===================== LOGIN ===================== #
 @anonymous_required
 def login(request):

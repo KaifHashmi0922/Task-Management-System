@@ -16,10 +16,18 @@
           All active users and their assigned roles.
         </p>
       </div>
-      <a href="{% url 'register' %}"
+      {% comment %} <a href="{% url 'register' %}"
          class="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">
         Invite member
-      </a>
+      </a> {% endcomment %}
+ {% if request.user.is_authenticated %}
+    {% if request.user.role|lower == 'admin' or request.user.role|lower == 'manager' %}
+    <a href="{% url 'register' %}?invite=true"
+       class="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">
+      Invite member
+    </a>
+    {% endif %}
+{% endif %}
     </div>
   </section>
 
@@ -94,6 +102,7 @@
         <thead class="bg-slate-50 text-slate-500">
           <tr class="border-b border-slate-200">
             <th class="px-6 py-4 font-semibold">Name</th>
+            
             <th class="px-6 py-4 font-semibold">Email</th>
             <th class="px-6 py-4 font-semibold">Role</th>
             <th class="px-6 py-4 font-semibold">Status</th>
@@ -107,6 +116,17 @@
                 <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-200 text-sm font-bold text-slate-700">
                   {{ user.username|slice:":1"|upper }}
                 </div>
+                {% comment %} <div class="flex h-10 w-10 overflow-hidden rounded-xl bg-slate-200">
+                {% if user.avatar %}
+                  <img src="{{ user.avatar.url }}"
+                      alt="{{ user.username }}"
+                      class="h-full w-full object-cover">
+                {% else %}
+                  <div class="flex h-full w-full items-center justify-center text-sm font-bold text-slate-700">
+                    {{ user.username|slice:":1"|upper }}
+                  </div>
+                {% endif %}
+              </div> {% endcomment %}
                 <div>
                   <p class="font-semibold text-slate-900">
                     {{ user.get_full_name|default:user.username }}
@@ -117,12 +137,12 @@
             </td>
             <td class="px-6 py-4 text-slate-600">{{ user.email }}</td>
             <td class="px-6 py-4">
-              {% with role=user.profile.role|default:'Member' %}
-                <span class="inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
-                  {{ role }}
-                </span>
-              {% endwith %}
-            </td>
+  {% with role=user.role|default:'Member' %}
+    <span class="inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
+      {{ role }}
+    </span>
+  {% endwith %}
+</td>
             <td class="px-6 py-4">
               <span class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                 Active
