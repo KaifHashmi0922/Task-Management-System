@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from tasks.models import Task, Project
+from django.http import HttpResponse
 
 User = get_user_model()
 
@@ -106,3 +107,11 @@ def users_list(request):
             "is_paginated": page_obj.has_other_pages(),
         },
     )
+    
+    
+    
+def users_edit(request,id):
+    if request.method=="POST":
+        users=users.objects.all()
+        print(users)
+    return HttpResponse("its working")

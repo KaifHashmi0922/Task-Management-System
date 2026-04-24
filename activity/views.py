@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.utils import timezone
-
+from django.http import HttpResponse
 from .models import Activity
 from tasks.models import Project, Task
 
@@ -320,3 +320,11 @@ def create_activity(request):
         'tasks': Task.objects.all(),
         'activity': Activity  # for ACTIVITY_TYPES
     })
+    
+    
+    
+def task_edit(request,id):
+    if request.method=="POST":
+        tasks=Task.objects.all()
+        print(len(task))
+    return HttpResponse("its working")
