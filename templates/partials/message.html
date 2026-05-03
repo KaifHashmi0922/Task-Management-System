@@ -1,0 +1,41 @@
+{% if messages %}
+  <div class="mb-6 space-y-3">
+    {% for message in messages %}
+      <div
+        class="relative flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm shadow-sm
+        {% if 'success' in message.tags %}border-emerald-200 bg-emerald-50 text-emerald-700{% endif %}
+        {% if 'error' in message.tags %}border-red-200 bg-red-50 text-red-700{% endif %}
+        {% if 'info' in message.tags %}border-blue-200 bg-blue-50 text-blue-700{% endif %}
+        {% if 'warning' in message.tags %}border-amber-200 bg-amber-50 text-amber-700{% endif %}
+        {% if 'debug' in message.tags %}border-slate-200 bg-slate-50 text-slate-700{% endif %}"
+        {% if 'error' in message.tags or 'warning' in message.tags %}
+          role="alert"
+        {% else %}
+          role="status"
+        {% endif %}
+      >
+        <div
+          class="mt-1 h-2.5 w-2.5 rounded-full
+          {% if 'success' in message.tags %}bg-emerald-500{% endif %}
+          {% if 'error' in message.tags %}bg-red-500{% endif %}
+          {% if 'info' in message.tags %}bg-blue-500{% endif %}
+          {% if 'warning' in message.tags %}bg-amber-500{% endif %}
+          {% if 'debug' in message.tags %}bg-slate-400{% endif %}">
+        </div>
+
+        <div class="flex-1 pr-8">
+          {{ message }}
+        </div>
+
+        <button
+          type="button"
+          onclick="this.closest('[role]').remove()"
+          aria-label="Dismiss notification"
+          class="absolute right-2 top-2 rounded-lg p-1 text-slate-400 transition hover:bg-white/70 hover:text-slate-700"
+        >
+          ✕
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

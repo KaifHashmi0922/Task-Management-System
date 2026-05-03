@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity Detail{% endblock %}
+{% block page_title %}Activity Details{% endblock %}
+{% block page_subtitle %}
+View complete information about this activity.
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- HEADER -->
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="flex justify-between items-start">
+
+      <div>
+        <h2 class="text-xl font-semibold text-slate-900">
+          {{ activity.title }}
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">
+          {{ activity.created_at|timesince }} ago
+        </p>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="flex gap-2">
+        <a href="{% url 'update_activity' activity.id %}"
+           class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-slate-200">
+          Edit
+        </a>
+
+        <a href="{% url 'delete_activity' activity.id %}"
+           class="px-4 py-2 rounded-xl bg-red-50 text-red-600 text-sm font-semibold hover:bg-red-100">
+          Delete
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+
+    <p class="text-slate-700 leading-relaxed">
+      {{ activity.description }}
+    </p>
+
+    <!-- META INFO -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- USER -->
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs text-slate-500">User</p>
+        <p class="font-semibold text-slate-900 mt-1">
+          {{ activity.user.username }}
+        </p>
+      </div>
+
+      <!-- PROJECT -->
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs text-slate-500">Project</p>
+        <p class="font-semibold text-slate-900 mt-1">
+          {{ activity.project.name }}
+        </p>
+      </div>
+
+      <!-- TASK -->
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs text-slate-500">Task</p>
+        <p class="font-semibold text-slate-900 mt-1">
+          {{ activity.task|default:"No task linked" }}
+        </p>
+      </div>
+
+      <!-- TYPE -->
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs text-slate-500">Activity Type</p>
+
+        <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-semibold
+          {% if activity.activity_type == 'create' %} bg-green-100 text-green-700
+          {% elif activity.activity_type == 'update' %} bg-yellow-100 text-yellow-700
+          {% elif activity.activity_type == 'delete' %} bg-red-100 text-red-700
+          {% elif activity.activity_type == 'comment' %} bg-blue-100 text-blue-700
+          {% elif activity.activity_type == 'complete' %} bg-emerald-100 text-emerald-700
+          {% else %} bg-slate-100 text-slate-700 {% endif %}
+        ">
+          {{ activity.activity_type|title }}
+        </span>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- BACK BUTTON -->
+  <div>
+    <a href="{% url 'activity_list' %}"
+       class="inline-block px-4 py-2 bg-slate-900 text-white rounded-xl text-sm hover:bg-slate-800">
+      ← Back to Activity
+    </a>
+  </div>
+
+</div>
+{% endblock %}

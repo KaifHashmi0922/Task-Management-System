@@ -1,0 +1,16 @@
+<nav aria-label="Breadcrumb" class="mb-3">
+  <ol class="flex flex-wrap items-center gap-2 text-sm">
+    <li>
+      <a href="{% url 'dashboard' %}"
+         class="text-slate-500 transition hover:text-slate-900">
+        Dashboard
+      </a>
+    </li>
+    <li aria-hidden="true" class="text-slate-300">/</li>
+    <li>
+      <span aria-current="page" class="font-semibold text-slate-900">
+        {% block current_page %}Overview{% endblock %}
+      </span>
+    </li>
+  </ol>
+</nav>

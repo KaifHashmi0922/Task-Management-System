@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}New project | Task Manager{% endblock %}
+{% block page_title %}New project{% endblock %}
+{% block page_subtitle %}Fill in the project details to set up a new workspace.{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl space-y-6">
+
+  <!-- Header -->
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="flex items-center gap-4">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-sm font-bold text-indigo-700">
+        {{ request.user.username|slice:":1"|upper }}
+      </div>
+      <div>
+        <h2 class="text-xl font-semibold tracking-tight text-slate-900">New project</h2>
+        <p class="mt-1 text-sm text-slate-500">
+          Set up a workspace for your team and start tracking tasks.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      {% if errors.non_field %}
+        <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {{ errors.non_field }}
+        </div>
+      {% endif %}
+
+      <!-- Project name -->
+      <div>
+        <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">
+          Project name *
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value="{{ values.name|default:'' }}"
+          placeholder="e.g. Website redesign"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
+          required
+        >
+        {% if errors.name %}
+          <p class="mt-1 text-xs text-red-600">{{ errors.name }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Owner -->
+      <div>
+        <label for="owner" class="mb-2 block text-sm font-semibold text-slate-700">
+          Owner *
+        </label>
+        <select
+          id="owner"
+          name="owner"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
+          required
+        >
+          <option value="">Select owner</option>
+          {% for user in all_users %}
+            <option value="{{ user.id }}" {% if values.owner == user.id|stringformat:"s" %}selected{% endif %}>
+              {{ user.get_full_name|default:user.username }}
+            </option>
+          {% endfor %}
+        </select>
+        {% if errors.owner %}
+          <p class="mt-1 text-xs text-red-600">{{ errors.owner }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="mb-2 block text-sm font-semibold text-slate-700">
+          Description
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          rows="4"
+          placeholder="Describe the project scope and goals."
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
+        >{{ values.description|default:'' }}</textarea>
+        {% if errors.description %}
+          <p class="mt-1 text-xs text-red-600">{{ errors.description }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-wrap gap-3 pt-4">
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-100"
+        >
+          Create project
+        </button>
+
+        <a href="{% url 'project_list' %}"
+           class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </section>
+
+</div>
+{% endblock %}
